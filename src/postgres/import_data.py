@@ -5,7 +5,7 @@ import logging
 import logging.config
 
 def main():
-    conn = create_connection('postgres', 'postgres', 'secret', '20.224.16.50', '5432')
+    conn = create_connection('postgres', 'postgres', 'secret', 'localhost', '5432')
     conn.autocommit = True
 
     logger.info("Importing data into the users table")
