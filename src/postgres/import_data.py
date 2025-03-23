@@ -1,6 +1,9 @@
 from postgres_utils import *
 import csv
 
+import logging
+import logging.config
+
 def main():
     conn = create_connection('postgres', 'postgres', 'secret', '20.224.16.50', '5432')
     conn.autocommit = True
