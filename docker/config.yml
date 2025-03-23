@@ -1,0 +1,5 @@
+db_name: postgres
+user: postgres
+password: secret
+url: host.docker.internal
+port: 5432

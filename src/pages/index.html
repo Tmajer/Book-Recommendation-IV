@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Recommender</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+
+        #recommendForm {
+            text-align: center;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        #loading {
+            display: none;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 4px;
+            width: 28px;
+            height: 28px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+
+        #dialog {
+            display: none;
+            padding: 4px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            margin-top: 4px;
+            border-radius: 5px;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+            max-width: 66vw;
+        }
+
+        #dialog h3 {
+            margin: 4px 0 2px 0;
+        }
+
+        #dialog p {
+            margin: 2px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="recommendForm">
+        <h2>Book Recommendation</h2>
+        <form>
+            <label for="inputBox">Book:</label>
+            <input type="text" id="inputBox" name="inputText" required>
+            <button type="submit">Send</button>
+        </form>
+        <div id="loading"></div>
+    </div>
+
+    <div id="dialog">
+        <h3>Result:</h3>
+        <p id="dialogContent"></p>
+    </div>
+
+    <script>
+        document.querySelector("#recommendForm form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let inputText = document.getElementById("inputBox").value;
+            let url = `/recommend/${encodeURIComponent(inputText)}`;
+            let loading = document.getElementById("loading");
+            let dialog = document.getElementById("dialog");
+            let dialogContent = document.getElementById("dialogContent");
+
+            loading.style.display = 'block';
+            dialog.style.display = 'none';
+
+            fetch(url, { method: "GET" })
+            .then(response => response.json())
+            .then(data => {
+                dialogContent.textContent = data.message || 'No response';
+                dialog.style.display = 'block';
+            })
+            .catch(error => {
+                console.error("Error during sending:", error);
+            })
+            .finally(() => {
+                loading.style.display = 'none';
+            });
+
+            document.getElementById("inputBox").value = "";
+        });
+    </script>
+</body>
+</html>
