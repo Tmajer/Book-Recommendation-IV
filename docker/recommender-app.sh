@@ -1,8 +1,11 @@
 #! /bin/bash
 
-function build {
+function build() {
 	docker build -t recommender-app-image ..
-  docker save recommender-app-image -o recommender-app.tar
+	if [[ -z "$1" || "$1" -ne "skip-save" ]];
+	then
+    docker save recommender-app-image -o recommender-app.tar
+  fi
 }
 
 function load {
@@ -25,7 +28,7 @@ function stop {
 
 case "$1" in
 build)
-	build
+	build "$2"
 	;;
 run)
 	run

@@ -3,9 +3,11 @@ function Run-App {
     docker run -d --name recommender-app --net interview-network -p 80:80 --mount type=bind,src=${pwd}/config.yml,dst=/code/src/config.yml recommender-app-image
 }
 
-function Build-App {
+function Build-App($argz) {
     docker build -t recommender-app-image ..
-    docker save recommender-app-image -o recommender-app.tar
+    if ((!$argz[1]) -or ($argz[1] -ne "skip-save")) {
+        docker save recommender-app-image -o recommender-app.tar
+    }
 }
 
 function Stop-App {
@@ -19,8 +21,8 @@ function Load-App {
 
 switch ($args[0]) {
     Run-App { Run-App }
-    Build-App { Build-App }
+    Build-App { Build-App($args) }
     Stop-App { Stop-App }
     Load-App { Load-App }
-    default { echo "Possible functions: recommender-app.ps1 Run-App | Build-App | Stop-App | Load-App"}
+    default { Write-Output "Possible functions: recommender-app.ps1 Run-App | Build-App | Stop-App | Load-App"}
 }

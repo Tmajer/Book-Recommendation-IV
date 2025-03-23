@@ -1,5 +1,7 @@
-data/
 .idea/
+*.tar
+*.png
+*.pdf
 
 *.iml
 
