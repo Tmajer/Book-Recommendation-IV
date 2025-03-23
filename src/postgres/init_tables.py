@@ -1,5 +1,7 @@
 from postgres_utils import *
 
+import logging
+import logging.config
 
 def main():
     conn = create_connection('postgres', 'postgres', 'secret', '20.224.16.50', '5432')
@@ -29,10 +31,15 @@ def main():
         )
         """
 
+    logger.info("Creating users table")
     execute_query(conn, create_users_table)
+    logger.info("Creating books table")
     execute_query(conn, create_books_table)
+    logger.info("Creating ratings table")
     execute_query(conn, create_ratings_table)
 
 
 if __name__ == '__main__':
+    logging.config.fileConfig('../logging.conf', disable_existing_loggers=False)
+    logger = logging.getLogger(__name__)
     main()

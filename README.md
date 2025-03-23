@@ -11,8 +11,16 @@ This repository contains code build for recommending books from the [Book Recomm
 ## Installation
 
 To run the app, just spin up Docker on your device. 
-There are pre-made Powershell scripts for platforms running Windows and pre-made shell script for platforms running Linux.
+There are pre-made Powershell scripts for platforms running Windows and pre-made bash script for platforms running Linux.
 These scripts are located in the `docker` directory.
+
+### Installing Python dependencies
+
+The project contains standard `requirements.txt` file, use it to install the requirements with
+
+```
+pip install -r requirements.txt
+```
 
 ### Starting PostgreSQL database
 
@@ -32,19 +40,17 @@ After starting the database, you can use the scripts to build the application im
   To start the application on Windows, run the following commands:
     
   ```
-  ./recommender-app.ps1 Build-App
-  ./recommender-app.ps1 Load-App
+  ./recommender-app.ps1 Build-App skip-save
   ./recommender-app.ps1 Run-App
   ```
   
   The `Build-App` function builds the application image (and saves it on disk). 
-  If you don't want to save the image on disk, call the function as follows: 
+  If you don't want to save the image on disk, call the function with the `skip-save` argument, if you want to save the image, call the function as follows: 
 
   ```
-  ./recommender-app.ps1 Build-App skip-save
+  ./recommender-app.ps1 Build-App
   ```
-
-  The `Load-App` function loads the built image. This can be ommited if you ran the build on your device as the image gets loaded during the build.
+  If you saved the image to disk, you can use the `./recommender-app.ps1 Load-App` function. This can be ommited if you ran the build on your device as the image gets loaded during the build.
 
   The `Run-App` runs the application.
 
@@ -61,19 +67,18 @@ After starting the database, you can use the scripts to build the application im
   To start the application on Linux, run the following commands:
     
   ```
-  ./recommender-app.sh build
-  ./recommender-app.sh load
+  ./recommender-app.sh build skip-save
   ./recommender-app.sh run
   ```
   
   The `build` function builds the application image (and saves it on disk). 
-  If you don't want to save the image on disk, call the function as follows: 
+  If you don't want to save the image on disk, call the function with the `skip-save` argument, if you want to save the image, call the function as follows: 
 
   ```
-  ./recommender-app.sh build skip-save
+  ./recommender-app.sh build
   ```
 
-  The `load` function loads the built image. This can be ommited if you ran the build on your device as the image gets loaded during the build.
+  If you saved the image to disk, you can use the `./recommender-app.sh load` function. This can be ommited if you ran the build on your device as the image gets loaded during the build.
 
   The `run` runs the application.
 

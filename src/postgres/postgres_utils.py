@@ -27,9 +27,9 @@ def execute_query(conn: connection, query: str) -> None:
     try:
         cursor.execute(query)
         cursor.close()
-        print("Query executed successfully")
+        logger.info("Query executed successfully")
     except OperationalError as e:
-        print(f"The error '{e}' occurred")
+        logger.error(f"The error '{e}' occurred")
 
 def execute_read_query(conn: connection, query: str) -> list[tuple[Any, ...]]:
     cursor = conn.cursor()
@@ -40,4 +40,4 @@ def execute_read_query(conn: connection, query: str) -> list[tuple[Any, ...]]:
         cursor.close()
         return result
     except OperationalError as e:
-        print(f"The error '{e}' occurred")
+        logger.error(f"The error '{e}' occurred")

@@ -5,6 +5,7 @@ def main():
     conn = create_connection('postgres', 'postgres', 'secret', '20.224.16.50', '5432')
     conn.autocommit = True
 
+    logger.info("Importing data into the users table")
     with open('../../data/Users.csv', newline='', encoding='utf-8') as csvfile:
         usersreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         next(usersreader, None)
@@ -20,7 +21,8 @@ def main():
         cursor = conn.cursor()
         cursor.execute(insert_query, users)
         cursor.close()
-
+    logger.info("Imported data into the users table")
+    logger.info("Importing data into the books table")
     with open('../../data/Books.csv', newline='', encoding='utf-8') as csvfile:
         booksreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         next(booksreader, None)
@@ -36,7 +38,8 @@ def main():
         cursor = conn.cursor()
         cursor.execute(insert_query, books)
         cursor.close()
-
+    logger.info("Imported data into the books table")
+    logger.info("Importing data into the ratings table")
     with open('../../data/Ratings.csv', newline='', encoding='utf-8') as csvfile:
         ratingsreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         next(ratingsreader, None)
@@ -60,6 +63,9 @@ def main():
         cursor = conn.cursor()
         cursor.execute(insert_query, ratings)
         cursor.close()
+    logger.info("Imported data into the ratings table")
 
 if __name__ == '__main__':
+    logging.config.fileConfig('../logging.conf', disable_existing_loggers=False)
+    logger = logging.getLogger(__name__)
     main()
