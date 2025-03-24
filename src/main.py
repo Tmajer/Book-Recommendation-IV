@@ -30,7 +30,7 @@ def read_item(book_name: str) -> dict[str, str]:
     selected_isbn = get_isbn_for_title(conn, book_name, book_mapper, rating_matrix)
 
     if type(selected_isbn) is list and 0 < len(selected_isbn):
-        return {"message": f"We could not find {book_name} in our database. Try inputting one of the following books:\n\n {'\n'.join(selected_isbn[:min(len(selected_isbn), 10)])}"}
+        return {"message": f"We could not find {book_name} in our database. Try inputting one of the following books:\n\n{'\n'.join(selected_isbn[:min(len(selected_isbn), 10)])}"}
     elif type(selected_isbn) is list:
         return {"message": f"We could not find {book_name} or any similar book titles in our database."}
 
