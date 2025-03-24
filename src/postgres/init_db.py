@@ -6,6 +6,41 @@ import logging.config
 
 def main():
     conn = create_connection('postgres', 'postgres', 'secret', 'localhost', '5432')
+
+    create_users_table = """
+        CREATE TABLE IF NOT EXISTS users (
+          user_id TEXT PRIMARY KEY,
+          location TEXT,
+          age INTEGER
+        )
+        """
+    create_books_table = """
+        CREATE TABLE IF NOT EXISTS books (
+          isbn TEXT PRIMARY KEY,
+          title TEXT,
+          author TEXT,
+          year_published INTEGER,
+          publisher TEXT
+        )
+        """
+    create_ratings_table = """
+        CREATE TABLE IF NOT EXISTS ratings (
+          user_id TEXT REFERENCES users(user_id),
+          isbn TEXT REFERENCES books(isbn),
+          book_rating INTEGER,
+          PRIMARY KEY (user_id, isbn)
+        )
+        """
+
+    logger.info("Creating users table")
+    execute_query(conn, create_users_table)
+    logger.info("Creating books table")
+    execute_query(conn, create_books_table)
+    logger.info("Creating ratings table")
+    execute_query(conn, create_ratings_table)
+
+    conn.close()
+    conn = create_connection('postgres', 'postgres', 'secret', 'localhost', '5432')
     conn.autocommit = True
 
     logger.info("Importing data into the users table")
@@ -30,7 +65,9 @@ def main():
         booksreader = csv.reader(csvfile, delimiter=',', quotechar='"')
         next(booksreader, None)
         books = []
+        known_isbns = set()
         for row in booksreader:
+            known_isbns.add(row[0])
             if row[3] == '':
                 books.append((row[0], row[1], row[2], None, row[4]))
             else:
@@ -48,6 +85,8 @@ def main():
         next(ratingsreader, None)
         ratings = []
         for row in ratingsreader:
+            if row[1] not in known_isbns:
+                continue
             if row[2] == '':
                 ratings.append((row[0], row[1], None))
             else:
@@ -67,6 +106,7 @@ def main():
         cursor.execute(insert_query, ratings)
         cursor.close()
     logger.info("Imported data into the ratings table")
+
 
 if __name__ == '__main__':
     logging.config.fileConfig('../logging.conf', disable_existing_loggers=False)

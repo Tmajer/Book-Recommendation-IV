@@ -22,6 +22,8 @@ The project contains standard `requirements.txt` file, use it to install the req
 pip install -r requirements.txt
 ```
 
+If you run into an error while installing the `psycopg2` package, either replace it with `psycopg2-binary` in the `requirements.txt` file or make sure the Build prerequisites are available on your platform as per https://www.psycopg.org/docs/install.html.
+
 ### Starting PostgreSQL database
 
 The app communicates with PostgreSQL server - if you never ran it on your platform, pull the PostgreSQL Docker Image using the following command:
@@ -93,9 +95,7 @@ After starting the database, you can use the scripts to build the application im
 
 After you start the application, you will need to init the database tables and import data into them.
 
-To create the tables, `cd` into `/src/postgres/` directory and run the `init_tables.py` script.
-
-You are expected to have the data in the `data` directory. To import the data, run the `import_data.py` script.
+To initialize the database, `cd` into ` Book-Reccomendation-IV/src/postgres/` directory and run the `init_db.py` script with Python.
 
 ### Checking the app
 

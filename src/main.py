@@ -25,7 +25,7 @@ def read_item(book_name: str) -> dict[str, str]:
     if conn is None:
         logger.error("System could not connect to the database")
         return {"message": "System could not connect to the book database, please try again later."}
-    rating_matrix, book_mapper, book_inverse_mapper = create_matrix(conn)
+    rating_matrix, book_mapper, book_inverse_mapper, book_rating_count = create_matrix(conn)
     logger.info(f"Retrieving ISBN for {book_name}")
     selected_isbn = get_isbn_for_title(conn, book_name, book_mapper, rating_matrix)
 
@@ -42,10 +42,16 @@ def read_item(book_name: str) -> dict[str, str]:
     recommendations = set()
 
     for i in similar_isbns:
-        if i in book_titles.keys():
+        if i in book_titles.keys() and book_rating_count[i] >= 5:
             recommendations.add(book_titles[i])
             if len(recommendations) == 5:
                 break
+    if len(recommendations) < 5:
+        for i in similar_isbns:
+            if i in book_titles.keys():
+                recommendations.add(book_titles[i])
+                if len(recommendations) == 5:
+                    break
 
     output = f"Since you read {book_name}, you might also like:\n"
     for i, recommendation in enumerate(recommendations):

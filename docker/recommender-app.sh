@@ -13,7 +13,7 @@ function load {
 }
 
 function run {
-  docker network create interview-network
+  docker network ls|grep interview-network > /dev/null || docker network create interview-network
   docker run -d --name recommender-app \
     --net interview-network \
     --mount 'type=bind,src='$(pwd)'/config.yml,dst=/code/src/config.yml' \

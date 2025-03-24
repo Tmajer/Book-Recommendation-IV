@@ -1,5 +1,9 @@
 function Run-App {
-    docker network create interview-network
+    $networkName = "interview-network"
+
+    if (!(docker network ls | select-string $networkName -Quiet )) {
+        docker network create $networkName
+    }
     docker run -d --name recommender-app --net interview-network -p 80:80 --mount type=bind,src=${pwd}/config.yml,dst=/code/src/config.yml recommender-app-image
 }
 

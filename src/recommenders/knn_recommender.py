@@ -26,7 +26,7 @@ def create_matrix(conn: connection) -> (csr_matrix, dict[str, int], dict[int, st
         book_rating_count[rating[1]] = book_rating_count.get(rating[1], 0) + 1
 
     user_results = [i[0] for i in user_results if user_rating_count[i[0]] > 10]
-    book_results = [i[0] for i in book_results if book_rating_count[i[0]] > 5]
+    book_results = [i[0] for i in book_results]
 
     cols = len(user_results)
     rows = len(book_results)
@@ -47,7 +47,7 @@ def create_matrix(conn: connection) -> (csr_matrix, dict[str, int], dict[int, st
     rating_matrix = csr_matrix((ratings, (book_index, user_index)), shape=(rows, cols))
     logger.debug(f"Matrix constructed with shape {rating_matrix.shape}")
 
-    return rating_matrix, book_mapper, book_inverse_mapper
+    return rating_matrix, book_mapper, book_inverse_mapper, book_rating_count
 
 
 def find_similar_books(isbn: str,
@@ -102,7 +102,7 @@ def get_isbn_for_title(conn: connection, title: str, book_mapper: dict[str, int]
 
 def main():
     conn = create_connection('postgres', 'postgres', 'secret', 'localhost', '5432')
-    rating_matrix, book_mapper, book_inverse_mapper = create_matrix(conn)
+    rating_matrix, book_mapper, book_inverse_mapper,book_rating_count = create_matrix(conn)
 
     initial_book = "The Queen of the Damned (Vampire Chronicles (Paperback))"
     selected_isbn = get_isbn_for_title(conn, initial_book, book_mapper, rating_matrix)
