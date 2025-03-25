@@ -42,13 +42,13 @@ def read_item(book_name: str) -> dict[str, str]:
     recommendations = set()
 
     for i in similar_isbns:
-        if i in book_titles.keys() and book_rating_count[i] >= 5:
+        if i in book_titles.keys() and book_rating_count[i] >= 5 and book_titles[i] != book_name:
             recommendations.add(book_titles[i])
             if len(recommendations) == 5:
                 break
     if len(recommendations) < 5:
         for i in similar_isbns:
-            if i in book_titles.keys():
+            if i in book_titles.keys() and book_titles[i] != book_name:
                 recommendations.add(book_titles[i])
                 if len(recommendations) == 5:
                     break
