@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 app = FastAPI()
 config = yaml.safe_load(open("./src/config.yml"))
 
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def read_root():
     return FileResponse('./src/pages/index.html')
 
@@ -33,6 +33,8 @@ def read_item(book_name: str) -> dict[str, str]:
         return {"message": f"We could not find {book_name} in our database. Try inputting one of the following books:\n\n{'\n'.join(selected_isbn[:min(len(selected_isbn), 10)])}"}
     elif type(selected_isbn) is list:
         return {"message": f"We could not find {book_name} or any similar book titles in our database."}
+    elif selected_isbn == '':
+        return {"message": f"We could not find any books similar to {book_name}, try inputing a different book."}
 
     select_books = "SELECT isbn, title FROM books;"
     book_titles = dict(execute_read_query(conn, select_books))
